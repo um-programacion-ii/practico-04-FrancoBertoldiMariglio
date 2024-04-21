@@ -67,12 +67,14 @@ public class Chef implements Callable {
     @Override
     public Void call() {
 
-        try {
-            cocinaService.cocinar(despensa, receta);
-        } catch (StockInsuficiente | VidaUtilInsuficiente e) {
-            e.printStackTrace();
-        }
+        while (True) {
 
-        return null;
-    }
+            try {
+                cocinaService.cocinar(despensa, receta);
+            } catch (StockInsuficiente | VidaUtilInsuficiente e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
 }
