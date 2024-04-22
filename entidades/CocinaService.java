@@ -27,25 +27,11 @@ public class CocinaService {
         return instance;
     }
 
-    public boolean cocinar(Despensa despensa, Receta receta) throws StockInsuficiente, VidaUtilInsuficiente, UtensilioNoDisponible {
-
-        despensaService.checkIngredientes(despensa, receta);
+    public boolean cocinar(Despensa despensa, Receta receta)  {
 
         Map<String, Ingrediente> ingredientesDespensa = despensa.getIngredientes();
         Map<String, Ingrediente> ingredientesReceta = receta.getIngredientes();
         Map<String, Utensilio> utensiliosReceta = receta.getUtensilios();
-
-        System.out.println("Preparación de: " + receta.getClass().getSimpleName() +"\n" + receta.getPreparacion());
-        System.out.println("\nIngredientes restantes despues de la preparación:");
-
-        for (Map.Entry<String, Ingrediente> ingredienteReceta : ingredientesReceta.entrySet()) {
-            Ingrediente ingredienteDespensa = ingredientesDespensa.get(ingredienteReceta.getKey());
-            if (ingredienteDespensa != null) {
-                int nuevaCantidad = ingredienteDespensa.getCantidad() - ingredienteReceta.getValue().getCantidad();
-                ingredientesDespensa.put(ingredienteReceta.getKey(), new Ingrediente(ingredienteReceta.getKey(), nuevaCantidad));
-                System.out.println(ingredienteReceta.getKey() + ": " + nuevaCantidad + " unidades");
-            }
-        }
 
         synchronized (this.estante) {
             try {
@@ -54,19 +40,37 @@ public class CocinaService {
                 e.printStackTrace();
                 return false;
             }
+
             Map<String, Utensilio> utensiliosEstante = estanteService.sacarUtenilios(this.estante, receta);
 
             System.out.println("\nVida útil de los utensilios después de la preparación:");
 
-            utensiliosReceta.entrySet()
-                .forEach(utensilioReceta -> {
-                    Utensilio utensilioEstante = utensiliosEstante.get(utensilioReceta.getKey());
-                    int nuevaVidaUtil = utensilioEstante.getVidaUtil() - 1;
-                    utensilioEstante.setVidaUtil(nuevaVidaUtil);
-                    System.out.println(utensilioReceta.getKey() + ": " + nuevaVidaUtil + " vida útil");
-                });
-                    }
+            utensiliosReceta.entrySet().forEach(utensilioReceta -> {
+                Utensilio utensilioEstante = utensiliosEstante.get(utensilioReceta.getKey());
+                int nuevaVidaUtil = utensilioEstante.getVidaUtil() - 1;
+                utensilioEstante.setVidaUtil(nuevaVidaUtil);
+                System.out.println(utensilioReceta.getKey() + ": " + nuevaVidaUtil + " vida útil");
+            });
+        }
 
+        try {
+            despensaService.checkIngredientes(despensa, receta);
+        } catch (StockInsuficiente e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        System.out.println("Preparación de: " + receta.getClass().getSimpleName() +"\n" + receta.getPreparacion());
+        System.out.println("\nIngredientes restantes despues de la preparación:");
+
+        ingredientesReceta.entrySet().stream().forEach(ingredienteReceta -> {
+            Ingrediente ingredienteDespensa = ingredientesDespensa.get(ingredienteReceta.getKey());
+            if (ingredienteDespensa != null) {
+                int nuevaCantidad = ingredienteDespensa.getCantidad() - ingredienteReceta.getValue().getCantidad();
+                ingredientesDespensa.put(ingredienteReceta.getKey(), new Ingrediente(ingredienteReceta.getKey(), nuevaCantidad));
+                System.out.println(ingredienteReceta.getKey() + ": " + nuevaCantidad + " unidades");
+            }
+        });
 
         System.out.println(receta.getClass().getSimpleName() + " cocinada con éxito!\n");
         return true;

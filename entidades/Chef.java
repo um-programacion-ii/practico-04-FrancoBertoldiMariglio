@@ -3,6 +3,8 @@ package entidades;
 import entidades.recetas.Receta;
 import entidades.excepciones.StockInsuficiente;
 import entidades.excepciones.VidaUtilInsuficiente;
+import entidades.excepciones.UtensilioNoDisponible;
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 public class Chef implements Callable {
@@ -10,17 +12,17 @@ public class Chef implements Callable {
     private String nombre;
     private int estrellasMichelin;
     private Despensa despensa;
-    private Receta receta;
+    private ArrayList<Receta> recetas;
     public CocinaService cocinaService = CocinaService.getInstance();
 
     public Chef() {
     }
 
-    public Chef(String nombre, int estrellasMichelin, Despensa despensa, Receta receta) {
+    public Chef(String nombre, int estrellasMichelin, Despensa despensa, ArrayList<Receta> recetas) {
         this.nombre = nombre;
         this.estrellasMichelin = estrellasMichelin;
         this.despensa = despensa;
-        this.receta = receta;
+        this.recetas = recetas;
     }
 
     public String getNombre() {
@@ -47,16 +49,12 @@ public class Chef implements Callable {
         this.despensa = despensa;
     }
 
-    public Receta getReceta() {
-        return receta;
+    public ArrayList<Receta> getReceta() {
+        return recetas;
     }
 
     public void setReceta(Receta receta) {
-        this.receta = receta;
-    }
-
-    public CocinaService getCocinaService() {
-        return cocinaService;
+        this.recetas.add(receta);
     }
 
     @Override
@@ -66,15 +64,15 @@ public class Chef implements Callable {
 
     @Override
     public Void call() {
-
-        while (True) {
-
-            try {
-                cocinaService.cocinar(despensa, receta);
-            } catch (StockInsuficiente | VidaUtilInsuficiente e) {
-                e.printStackTrace();
+        int i = 0;
+        while (!recetas.isEmpty()) {
+            Receta recetaActual = recetas.get(i);
+            boolean cocinada = cocinaService.cocinar(despensa, recetaActual);
+            if (cocinada) {
+                recetas.remove(i);
             }
-
-            return null;
+            i = (i + 1) % recetas.size();
         }
+        return null;
+    }
 }
