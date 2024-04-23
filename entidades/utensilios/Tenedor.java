@@ -5,7 +5,7 @@ import entidades.utensilios.Utensilio;
 public class Tenedor extends Utensilio {
 
     public Tenedor() {
-        super(4);
+        super(1000);
     }
 
     public Tenedor(int vidaUtil) {

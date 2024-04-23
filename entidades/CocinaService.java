@@ -27,7 +27,7 @@ public class CocinaService {
         return instance;
     }
 
-    public boolean cocinar(Despensa despensa, Receta receta)  {
+    public boolean cocinar(Despensa despensa, Receta receta) throws InterruptedException {
 
         Map<String, Ingrediente> ingredientesDespensa = despensa.getIngredientes();
         Map<String, Ingrediente> ingredientesReceta = receta.getIngredientes();
@@ -38,6 +38,7 @@ public class CocinaService {
                 estanteService.checkUtensilios(this.estante, receta);
             } catch (UtensilioNoDisponible | VidaUtilInsuficiente e) {
                 e.printStackTrace();
+                System.out.println("Estoy esperando que se desocupe el utensilio");
                 return false;
             }
 
@@ -52,6 +53,8 @@ public class CocinaService {
                 System.out.println(utensilioReceta.getKey() + ": " + nuevaVidaUtil + " vida útil");
             });
         }
+
+        Thread.sleep(3000);
 
         try {
             despensaService.checkIngredientes(despensa, receta);
@@ -71,6 +74,8 @@ public class CocinaService {
                 System.out.println(ingredienteReceta.getKey() + ": " + nuevaCantidad + " unidades");
             }
         });
+
+        Thread.sleep(3000);
 
         System.out.println(receta.getClass().getSimpleName() + " cocinada con éxito!\n");
         return true;

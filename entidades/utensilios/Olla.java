@@ -3,7 +3,7 @@ package entidades.utensilios;
 public class Olla extends Utensilio {
 
     public Olla() {
-        super(1);
+        super(1000);
     }
 
     public Olla(int vidaUtil) {

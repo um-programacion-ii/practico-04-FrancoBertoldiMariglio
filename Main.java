@@ -1,5 +1,6 @@
 import entidades.*;
 import entidades.recetas.*;
+import entidades.LavaPlatos;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,21 +28,21 @@ public class Main {
 
     private static List<Ingrediente> crearIngredientes() {
         return Arrays.asList(
-            new Ingrediente("Harina", 500),
+            new Ingrediente("Harina", 1000),
             new Ingrediente("Azucar", 200),
-            new Ingrediente("Sal", 100),
-            new Ingrediente("Pimienta", 50),
+            new Ingrediente("Sal", 300),
+            new Ingrediente("Pimienta", 200),
             new Ingrediente("Manteca", 100),
             new Ingrediente("Fideos", 1000),
             new Ingrediente("Crema", 300),
-            new Ingrediente("Huevo", 6),
-            new Ingrediente("Carne", 500),
-            new Ingrediente("Pan rallado", 250),
-            new Ingrediente("Aceite", 100),
-            new Ingrediente("Queso", 100),
-            new Ingrediente("Cebolla", 100),
-            new Ingrediente("Papa", 500),
-            new Ingrediente("Leche", 100)
+            new Ingrediente("Huevo", 12),
+            new Ingrediente("Carne", 1000),
+            new Ingrediente("Pan rallado", 800),
+            new Ingrediente("Aceite", 500),
+            new Ingrediente("Queso", 400),
+            new Ingrediente("Cebolla", 600),
+            new Ingrediente("Papa", 900),
+            new Ingrediente("Leche", 500)
         );
     }
 
@@ -65,10 +66,10 @@ public class Main {
         Random random = new Random();
 
         // Viernes, Sabado y Feriados
-        List<Chef> chefsA = crearChefs(2, despensas, todasLasRecetas, random);
+        List<Chef> chefsA = crearChefs(5, despensas, todasLasRecetas, random);
 
         // Domingo a Jueves
-        List<Chef> chefsB = crearChefs(2, despensas, todasLasRecetas, random);
+        List<Chef> chefsB = crearChefs(8, despensas, todasLasRecetas, random);
 
         List<String> dias = new ArrayList<>();
         dias.add("Domingo");

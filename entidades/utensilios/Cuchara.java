@@ -5,7 +5,7 @@ import entidades.utensilios.Utensilio;
 public class Cuchara extends Utensilio {
 
     public Cuchara() {
-        super(5);
+        super(1000);
     }
 
     public Cuchara(int vidaUtil) {

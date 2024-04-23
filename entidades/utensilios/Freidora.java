@@ -2,7 +2,7 @@ package entidades.utensilios;
 
 public class Freidora extends Utensilio {
     public Freidora() {
-                super(2);
+                super(1000);
             }
 
     public Freidora(int vidaUtil) {

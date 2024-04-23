@@ -2,7 +2,7 @@ package entidades.utensilios;
 
 public class Sarten extends Utensilio {
     public Sarten() {
-            super(2);
+            super(1000);
 }
 
     public Sarten(int vidaUtil) {

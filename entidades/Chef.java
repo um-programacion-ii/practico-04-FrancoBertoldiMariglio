@@ -63,15 +63,21 @@ public class Chef implements Callable {
     }
 
     @Override
-    public Void call() {
+    public Void call()  {
         int i = 0;
         while (!recetas.isEmpty()) {
             Receta recetaActual = recetas.get(i);
-            boolean cocinada = cocinaService.cocinar(despensa, recetaActual);
-            if (cocinada) {
-                recetas.remove(i);
+            try {
+                boolean cocinada = cocinaService.cocinar(despensa, recetaActual);
+                if (cocinada) {
+                    recetas.remove(i);
+                    continue;
+                }
+                i = (i + 1) % recetas.size();
             }
-            i = (i + 1) % recetas.size();
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
